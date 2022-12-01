@@ -30,7 +30,8 @@ export function useListConfig(config: any, index: string) {
     config.metricTypes[i] === MetricQueryTypes.ReadMetricsValues &&
     !types.includes(calculation);
   const isAvg =
-    config.metricTypes[i] === MetricQueryTypes.ReadMetricsValues &&
+      (config.metricTypes[i] === MetricQueryTypes.ReadMetricsValues ||
+          config.metricTypes[i] === MetricQueryTypes.ReadNonZeroMetricsValues) &&
     types.includes(calculation);
   return {
     isLinear: line,

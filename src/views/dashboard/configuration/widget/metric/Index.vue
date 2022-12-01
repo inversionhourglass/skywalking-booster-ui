@@ -421,6 +421,7 @@ function setMetricTypeList(type: string) {
   if (states.isList || graph.value.type === "Table") {
     return [
       { label: "read all values in the duration", value: "readMetricsValues" },
+      { label: "read all non-zero values in the duration", value: "readNonZeroMetricsValues" },
       {
         label: "read the single value in the duration",
         value: "readMetricsValue",

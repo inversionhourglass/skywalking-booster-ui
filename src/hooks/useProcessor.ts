@@ -166,9 +166,14 @@ export function useSourceProcessor(
     const m = config.metrics[index];
     const c = (config.metricConfig && config.metricConfig[index]) || {};
 
-    if (type === MetricQueryTypes.ReadMetricsValues) {
+    if (
+        type === MetricQueryTypes.ReadMetricsValues ||
+        type === MetricQueryTypes.ReadNonZeroMetricsValues
+    ) {
       source[m] =
         (resp.data[keys[index]] &&
+          resp.data[keys[index]].values.values &&
+          resp.data[keys[index]].values.values.length &&
           calculateExp(resp.data[keys[index]].values.values, c)) ||
         [];
     }
@@ -303,14 +308,19 @@ export function usePodsSource(
       if (config.metricTypes[index] === MetricQueryTypes.ReadMetricsValue) {
         d[name] = aggregation(resp.data[key], c);
       }
-      if (config.metricTypes[index] === MetricQueryTypes.ReadMetricsValues) {
+      if (
+        config.metricTypes[index] === MetricQueryTypes.ReadMetricsValues ||
+        config.metricTypes[index] === MetricQueryTypes.ReadNonZeroMetricsValues
+        ) {
         d[name] = {};
         if (
           [
             Calculations.Average,
             Calculations.ApdexAvg,
             Calculations.PercentageAvg,
-          ].includes(c.calculation)
+          ].includes(c.calculation) &&
+          resp.data[key].values.values &&
+          resp.data[key].values.values.length
         ) {
           d[name]["avg"] = calculateExp(resp.data[key].values.values, c);
         }
@@ -353,6 +363,7 @@ function calculateExp(
   arr: { value: number }[],
   config: { calculation?: string }
 ): (number | string)[] {
+  if (arr.length == 0) return [];
   const sum = arr
     .map((d: { value: number }) => d.value)
     .reduce((a, b) => a + b);

@@ -17,6 +17,7 @@
 export enum MetricQueryTypes {
   ReadMetricsValue = "readMetricsValue",
   ReadMetricsValues = "readMetricsValues",
+  ReadNonZeroMetricsValues = "readNonZeroMetricsValues",
   SortMetrics = "sortMetrics",
   ReadLabeledMetricsValues = "readLabeledMetricsValues",
   READHEATMAP = "readHeatMap",
@@ -68,6 +69,12 @@ screenMap.set(sizeEnum.XXL, screenEnum.XXL);
 
 export const RespFields: any = {
   readMetricsValues: `{
+    label
+    values {
+      values {value}
+    }
+  }`,
+  readNonZeroMetricsValues: `{
     label
     values {
       values {value}
